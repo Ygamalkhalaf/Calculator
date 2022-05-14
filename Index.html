@@ -1,0 +1,292 @@
+
+<style>
+
+    body {
+        background: url( https://images.pexels.com/photos/139306/pexels-photo-139306.jpeg?w=1260&h=750&auto=compress&cs=tinysrgb ) no-repeat;
+        background-size: cover;
+    }
+
+    .casio {
+        display: inline;
+        font-size: 26px;
+        font-weight: bold;
+        color: #9A9DA5;
+        font-family: 'Ubuntu', sans-serif;
+        letter-spacing: 1px;
+    }
+
+    .container {
+        width: 400px;
+        background: #242632;
+        overflow: hidden;
+        border-bottom-right-radius: 100px;
+        border-bottom-left-radius: 100px;
+        border-top-left-radius: 40px;
+        border-top-right-radius: 40px;
+        margin: 0 auto;
+        box-shadow: 0px 10px 19px rgba(49,49,49, .5);
+    }
+
+    .display-container {
+        padding: 20px;
+        width: 310px;
+        margin-left: 16px;
+        padding-bottom: 0px;
+    }
+
+        .display-container .model {
+            display: block;
+            font-family: 'Times New Roman';
+            color: #9A9DA5;
+            text-indent: 12px;
+        }
+
+    .display {
+        clear: both;
+        padding: 20px;
+        background: #9EB3AF;
+        font-family: digital;
+        font-size: 24px;
+        border: 10px inset rgba(179, 158, 173,0.22);
+        text-align: right;
+        letter-spacing: 5px;
+        font-family: 'Ubuntu', sans-serif;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .solar {
+        border: 5px inset #293C46;
+        background: #46463C;
+        width: 100px;
+        height: 30px;
+        float: right;
+        margin-bottom: 10px;
+    }
+
+        .solar span {
+            border-right: 2px solid #31342C;
+            width: 23.01px;
+            height: inherit;
+            display: block;
+            float: left;
+        }
+
+    button {
+        background: #2C303B;
+        color: white;
+        border: 3px solid #191B21;
+        font-family: 'Montserrat', sans-serif;
+        padding: 5px;
+        margin: 5px;
+        font-size: 27px;
+        min-width: 70px;
+        min-height: 50px;
+        cursor: pointer;
+        float: left;
+        border-radius: 5px;
+        outline: none;
+        border-radius: 10px;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+
+    .input-container {
+        overflow: hidden;
+        padding: 20px;
+        padding-top: 0;
+        border: 15px solid #242632;
+        border-top: 0;
+        border-bottom: 0;
+        padding-bottom: 50px;
+    }
+
+    .commandNum-container {
+        float: left;
+    }
+
+    .number-container {
+        clear: left;
+        border-radius: 30px;
+    }
+
+    .command-container button {
+        background: #4B494E;
+    }
+
+    .command-container {
+        overflow: hidden;
+        float: left;
+    }
+
+    .calc-container {
+        overflow: hidden;
+        float: left;
+    }
+
+    .zero {
+    }
+
+    .command-container button:first-child {
+        background: #6B5BA4;
+        font-size: 20px;
+    }
+
+    .operator-container span:first-child button,
+    .command-container button:last-child {
+        background: #E38F4F;
+        color: black;
+    }
+
+    .calc-container:nth-child(2) {
+    }
+
+    .calc-container {
+    }
+
+    .operator-container {
+    }
+
+        .operator-container span:last-child button {
+        }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Calc</title>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Keania+One' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body ng-app="Calculator" ng-cloak>
+
+    <div ng-controller="ArthmeticController" class="container">
+
+        <div class="display-container">
+            <p class="casio">CASIO</p>
+            <div class="solar">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <span class="model"><i>fx</i>-85MS</span>
+            <p class="display">{{ equation }}</p>
+        </div>
+
+        <div class="input-container">
+            <div class="commandNum-container">
+                <div class="command-container">
+                    <button ng-click="command('Off')">OFF</button>
+                    <button ng-repeat="i in ['%','DEL']" ng-click="command(i)" ng-disabled="isOff">{{ i }}</button>
+                </div>
+
+                <div class="number-container calc-container">
+                    <button ng-repeat="i in [7,8,9]" ng-click="updateCurrNum(i)" ng-disabled="isOff">{{ i }}</button></br>
+                    <button ng-repeat="i in [4,5,6]" ng-click="updateCurrNum(i)" ng-disabled="isOff">{{ i }}</button></br>
+                    <button ng-repeat="i in [3,2,1]" ng-click="updateCurrNum(i)" ng-disabled="isOff">{{ i }}</button></br>
+                    <button class="zero" ng-click="updateCurrNum(0)" ng-disabled="isOff">0</button>
+                    <button ng-click="addDecimal()" ng-disabled="isFloat" ng-disabled="isOff">.</button>
+                    <button ng-click="calculate()" ng-disabled="isOff">=</button>
+                </div>
+            </div>
+
+            <div class="operator-container calc-container">
+                <span ng-repeat="i in ['AC', '+','-','*','/']" ng-disabled="isOff" ng-click="concatOperator(i)">
+                    <button>{{ i }}</button>
+                    </br>
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+<script>
+    var app = angular.module("Calculator", []);
+
+    app.controller("DisplayController", [
+        "$scope",
+        function ($scope) {
+            $scope.display = "";
+        }
+    ]);
+
+    app.controller("ArthmeticController", [
+        "$scope",
+        function ($scope) {
+            $scope.operatorLastUsed = false;
+            $scope.equation = "0";
+            $scope.isFloat = false;
+            $scope.isInit = true;
+            $scope.isOff = false;
+
+            $scope.concatOperator = function (operator) {
+                if (operator === "AC") {
+                    $scope.equation = "0";
+                    $scope.isInit = true;
+                } else {
+                    if (!$scope.equation[$scope.equation.length - 1].match(/[-+*\/]/)) {
+                        $scope.equation += operator;
+                        $scope.isFloat = false;
+                    }
+                }
+            };
+
+            $scope.command = function (command) {
+                if (command === "Off") {
+                    if ($scope.isOff === false) {
+                        $(".display").css("color", "#95A799");
+                        $("button:contains('OFF')").text("ON");
+                        $scope.isOff = true;
+                    } else {
+                        $(".display").css("color", "black");
+                        $("button:contains('ON')").text("OFF");
+                        $scope.isOff = false;
+                    }
+                } else if (command === "%") {
+                    if (!$scope.equation[$scope.equation.length - 1].match("%")) {
+                        $scope.equation += "%";
+                    }
+                } else if (command === "DEL") {
+                    if ($scope.equation.length == 1) {
+                        $scope.equation = $scope.equation.substring(
+                            0,
+                            $scope.equation.length - 1
+                        );
+                        $scope.equation = "0";
+                        $scope.isInit = true;
+                    } else {
+                        $scope.equation = $scope.equation.substring(
+                            0,
+                            $scope.equation.length - 1
+                        );
+                    }
+                }
+            };
+
+            $scope.addDecimal = function () {
+                $scope.isFloat = true;
+                $scope.equation += ".";
+            };
+
+            $scope.updateCurrNum = function (num) {
+                if ($scope.isInit) {
+                    $scope.equation = num.toString();
+                    $scope.isInit = false;
+                } else $scope.equation += num;
+            };
+
+            $scope.calculate = function () {
+                $scope.equation = eval($scope.equation).toString();
+            };
+        }
+    ]);
+
+</script>
